@@ -1,4 +1,5 @@
 library(rmarkdown)
+library(shiny)
 library(broom)
 library(mitch)
 options(shiny.maxRequestSize = 100 * 1024^2)
