@@ -26,10 +26,19 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(
         tabPanel("Instructions", includeMarkdown("intro.md")),
-        tabPanel("limma CSV check", tableOutput("csvcheck1"), textOutput("csvcheck2")),
-        tabPanel("GMT check", "Peek at the gene sets",verbatimTextOutput("gmtcheck1"), textOutput("gmtcheck2"),"Summary of gene set sizes",verbatimTextOutput("gmtcheck3")),
+        tabPanel("limma CSV check", tableOutput("csvcheck1"),
+                 textOutput("csvcheck2")),
+        tabPanel("GMT check", "Peek at the gene sets",
+                 verbatimTextOutput("gmtcheck1"),
+                 textOutput("gmtcheck2"),
+                 "Summary of gene set sizes",
+                 verbatimTextOutput("gmtcheck3")),
         tabPanel("Enrichment Result", tableOutput("enrichment_data")),
-        tabPanel("Enrichment Plot", plotOutput("enrichmentplot"))
+        tabPanel("Enrichment Plot", 
+                 "Pathways with FDR<0.05 with highest enrichment score",
+                 plotOutput("enrichmentplot1", width = "600px", height = "500px"),
+                 "Pathways with smallest p-values",
+                 plotOutput("enrichmentplot2", width = "600px", height = "500px"))
       )
     )
   )
@@ -106,8 +115,12 @@ server <- function(input, output, session) {
     head(enrichment_data(),50)
   })
 
-  plot_data <- reactive({
-    edata <- head(enrichment_data(),20)
+  plot_data1 <- reactive({
+    edata <- head(subset(enrichment_data(),p.adjustANOVA<0.05),20)
+    if (nrow(edata)==0) {
+      plot.new()
+      text(0.5,0.5,labels="No significant sets found (FDR<0.05)")
+    }
     edata <- edata[order(edata$s.dist),]
     vec <- edata$s.dist
     names(vec) <- edata$set
@@ -118,9 +131,27 @@ server <- function(input, output, session) {
     mtext("Red=higher,Blue=lower methylation",side=3,adj=1)
   })
   
-  output$enrichmentplot <- renderPlot({
-    plot_data()
-  }, height = 550, width=600)
+  output$enrichmentplot1 <- renderPlot({
+    plot_data1()
+  }, height = 500, width=600)
+
+  plot_data2 <- reactive({
+    edata <- enrichment_data()
+    edata <- edata[order(edata$p.adjustANOVA),]
+    edata <- head(edata,20)
+    edata <- edata[order(edata$s.dist),]
+    vec <- edata$s.dist
+    names(vec) <- edata$set
+    names(vec) <- substr(names(vec), start = 1, stop = 60)
+    names(vec) <- gsub("_"," ",names(vec))
+    par(mar=c(4,33,1,1))
+    barplot(abs(vec),col=sign(-vec)+3,horiz=TRUE,las=1,cex.names=1,xlab="Enrichment Score")
+    mtext("Red=higher,Blue=lower methylation",side=3,adj=1)
+  })
+  
+  output$enrichmentplot2 <- renderPlot({
+    plot_data2()
+  }, height = 500, width=600)
   
   regression_model <- reactive({
     req(data(), input$x_axis, input$y_axis)
