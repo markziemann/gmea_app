@@ -4,6 +4,7 @@ Thanks for trying out LAM!
 
 LAM requires a Limma output file, from either 450K or EPIC type microarrays.
 The CSV file requires that the probe names have their own column heading.
+It also needs a column of t values, with the header matching "t".
 Check out the [Demo CSV file](https://raw.githubusercontent.com/markziemann/gmea_app/main/example_data/DMPs_sample.csv) which corresponds to a 450K array.
 
 LAM also requires a GMT file to work, which is the standard format for gene set
