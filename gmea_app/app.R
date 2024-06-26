@@ -1,4 +1,4 @@
-library(tidyverse)
+#library(tidyverse)
 library(ggplot2)
 library(rmarkdown)
 library(broom)
@@ -25,13 +25,11 @@ ui <- fluidPage(
     ),
     mainPanel(
       tabsetPanel(
-        tabPanel("Data", tableOutput("contents")),
-        tabPanel("Summary", verbatimTextOutput("summary")),
-        tabPanel("Structure", verbatimTextOutput("structure")),
-        tabPanel("Structure GMT", verbatimTextOutput("structure2")),
+        tabPanel("Instructions", includeMarkdown("intro.md")),
+        tabPanel("limma CSV check", tableOutput("csvcheck1"), textOutput("csvcheck2")),
+        tabPanel("GMT check", "Peek at the gene sets",verbatimTextOutput("gmtcheck1"), textOutput("gmtcheck2"),"Summary of gene set sizes",verbatimTextOutput("gmtcheck3")),
         tabPanel("Enrichment Result", tableOutput("enrichment_data")),
-        tabPanel("Enrichment Plot", plotOutput("enrichmentplot")),
-        tabPanel("Regression Summary", verbatimTextOutput("regression_summary"))
+        tabPanel("Enrichment Plot", plotOutput("enrichmentplot"))
       )
     )
   )
@@ -49,26 +47,34 @@ server <- function(input, output, session) {
   data2 <- reactive({
     req(input$file2)
     sets <- gmt_import(input$file2$datapath)
+    names(sets) <- gsub("_"," ",names(sets))
     return(sets)
   })
   
-  output$contents <- renderTable({
+  output$csvcheck1 <- renderTable({
     req(data())
-    head(data(), rownames = TRUE)
+    head(data())
   })
   
-  output$summary <- renderPrint({
-    summary(data())
+  output$csvcheck2 <- renderText({
+    req(data())
+    paste("Limma CSV file has",nrow(data()),"rows of data")
   })
   
-  output$structure <- renderPrint({
-    str(data())
+  output$gmtcheck1 <- renderPrint({
+    req(data2())
+    lapply(head(data2(),3),function(x) {x[1:5]} )
+  })
+
+  output$gmtcheck2 <- renderText({
+    req(data2())
+    paste("Number of gene sets:",length(data2()))
   })
   
-  output$structure2 <- renderPrint({
-    str(data2())
+  output$gmtcheck3 <- renderPrint({
+    req(data2())
+    summary(unlist(lapply(data2(),length)))
   })
-  
   output$prioritisation <- renderUI({
     selectInput("prioritisation", "Prioritisation", choices = c("Effect","Significance"), selected = "Effect")
   })
@@ -107,13 +113,14 @@ server <- function(input, output, session) {
     names(vec) <- edata$set
     names(vec) <- substr(names(vec), start = 1, stop = 60)
     names(vec) <- gsub("_"," ",names(vec))
-    par(mar=c(5,40,3,3))
-    barplot(abs(vec),col=sign(-vec)+3,horiz=TRUE,las=1,cex.names=1.1,xlab="Enrichment Score")
+    par(mar=c(4,33,1,1))
+    barplot(abs(vec),col=sign(-vec)+3,horiz=TRUE,las=1,cex.names=1,xlab="Enrichment Score")
+    mtext("Red=higher,Blue=lower methylation",side=3,adj=1)
   })
   
   output$enrichmentplot <- renderPlot({
     plot_data()
-  }, height = 800, width=800)
+  }, height = 550, width=600)
   
   regression_model <- reactive({
     req(data(), input$x_axis, input$y_axis)
