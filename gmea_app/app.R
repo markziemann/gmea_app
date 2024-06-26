@@ -48,6 +48,7 @@ server <- function(input, output, session) {
   data <- reactive({
     req(input$file)
     df <- read.csv(input$file$datapath, header = TRUE, check.names = FALSE)
+    colnames(df)[1] <- "Name"
     return(df)
   })
   
@@ -94,13 +95,16 @@ server <- function(input, output, session) {
   
   output$chip_selector <- renderUI({
     selectInput("chip", "Choose array chip", choices = c("450K","EPIC"), 
-                selected = "450K")
+                selected = "EPIC")
   })
   
   edata <- reactive({
     req(data(),data2(),input$chip)
     if (input$chip == "450K") {
       gt <- readRDS("450K.rds")
+    }
+    if (input$chip == "EPIC") {
+      gt <- readRDS("EPIC.rds")
     }
     if (input$chip == "EPIC") {
       gt <- readRDS("EPIC.rds")
