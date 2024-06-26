@@ -1,5 +1,3 @@
-#library(tidyverse)
-library(ggplot2)
 library(rmarkdown)
 library(broom)
 library(mitch)

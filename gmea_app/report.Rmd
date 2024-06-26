@@ -1,5 +1,6 @@
 ---
-title: "LAM - Infinium Enrichment Analysis Tool Report"
+title: "LAM - Enrichment Analysis Report"
+date: "`r Sys.Date()`"
 output:
   html_document:
     smart: false
@@ -13,13 +14,13 @@ params:
 ## Background
 
 LAM is short for limma-average-mitch and is a tool for gene set enrichment analysis of
-Infinium array data.
+Infinium DNA methylation array data.
 As the name suggests, the process begins with a limma table of differential methylation
 of probes.
 Each gene could have one or hundreds of probes, so to aggregate them, LAM finds the
 average value for each gene.
 These values can then undergo enrichment analysis with other general purpose tools.
-In this case we are using [mitch](https://doi.org/10.1186/s12864-020-06856-9), 
+In this case we are using mitch ([Kaspi & Ziemann 2020](https://doi.org/10.1186/s12864-020-06856-9)), 
 because it is accurate and has nice visualisation features.
 
 Mitch uses a rank-ANOVA approach which was described previously by [Cox and Mann 2012](https://doi.org/10.1186/1471-2105-13-S16-S12).
