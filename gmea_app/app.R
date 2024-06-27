@@ -1,3 +1,4 @@
+library(markdown)
 library(rmarkdown)
 library(shiny)
 library(broom)
