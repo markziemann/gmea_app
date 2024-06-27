@@ -4,7 +4,7 @@ library(shiny)
 library(broom)
 library(mitch)
 options(shiny.maxRequestSize = 100 * 1024^2)
-options(shiny.port = 3838)
+#options(shiny.port = 3838)
 
 # Define UI
 ui <- fluidPage(
