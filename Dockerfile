@@ -26,7 +26,7 @@ RUN Rscript -e 'BiocManager::install(c("IlluminaHumanMethylation450kanno.ilmn12.
 RUN git clone https://github.com/markziemann/gmea_app.git
 ENV DIRPATH /gmea_app
 WORKDIR $DIRPATH
-RUN cp -r gmea_app/* /srv/shiny-server/
+COPY report.Rmd intro.md app.R 450K.rds EPIC.rds /srv/shiny-server/
 
 # Expose the application port
 USER shiny
