@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install CRAN packages
-RUN Rscript -e 'install.packages(c("markdown","rmarkdown","shiny","HGNChelper","BiocManager"))'
+RUN Rscript -e 'install.packages(c("markdown","rmarkdown","shiny","HGNChelper","BiocManager","RhpcBLASctl"))'
 
 # Install bioconductor packages
 RUN Rscript -e 'BiocManager::install(c("IlluminaHumanMethylation450kanno.ilmn12.hg19","IlluminaHumanMethylationEPICanno.ilm10b4.hg19" ,"mitch"))'

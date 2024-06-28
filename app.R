@@ -3,6 +3,7 @@ library(rmarkdown)
 library(shiny)
 library(broom)
 library(mitch)
+library("RhpcBLASctl")
 options(shiny.maxRequestSize = 100 * 1024^2)
 RhpcBLASctl::blas_set_num_threads(1)
 
