@@ -1,15 +1,16 @@
-library(markdown)
-library(rmarkdown)
-library(shiny)
-library(broom)
-library(mitch)
+library("markdown")
+library("rmarkdown")
+library("shiny")
+library("broom")
+library("mitch")
 library("RhpcBLASctl")
+library("shinybusy")
 options(shiny.maxRequestSize = 100 * 1024^2)
 RhpcBLASctl::blas_set_num_threads(1)
 
 # Define UI
 ui <- fluidPage(
-  titlePanel("LAM - Infinium Enrichment Analysis Tool"),
+  titlePanel("LAM - Infinium Enrichment Analysis Tool V0.1"),
   sidebarLayout(
     sidebarPanel(
       fileInput("file", "Choose limma CSV File",
@@ -43,7 +44,7 @@ ui <- fluidPage(
                  plotOutput("enrichmentplot2", width = "600px", height = "500px"))
       )
     )
-  )
+  ), shinybusy::add_busy_spinner(spin = "fading-circle")
 )
 
 # Define server logic

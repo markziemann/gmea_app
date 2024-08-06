@@ -17,16 +17,17 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install CRAN packages
-RUN Rscript -e 'install.packages(c("markdown","rmarkdown","shiny","HGNChelper","BiocManager","RhpcBLASctl"))'
+RUN Rscript -e 'install.packages(c("pkgload","markdown","rmarkdown","shiny","BiocManager","RhpcBLASctl","shinybusy"))'
 
 # Install bioconductor packages
-RUN Rscript -e 'BiocManager::install(c("IlluminaHumanMethylation450kanno.ilmn12.hg19","IlluminaHumanMethylationEPICanno.ilm10b4.hg19" ,"mitch"))'
+RUN Rscript -e 'BiocManager::install(c("mitch"))'
 
 # get a clone of the code
 RUN git clone https://github.com/markziemann/gmea_app.git
 ENV DIRPATH /gmea_app
 WORKDIR $DIRPATH
 COPY report.Rmd intro.md app.R 450K.rds EPIC.rds /srv/shiny-server/
+COPY favicon.ico /www/favicon.ico
 
 # Expose the application port
 USER shiny

@@ -33,6 +33,9 @@ After uploading is complete and parameters are set to your liking, click on
 
 But be patient, because it may take a few minutes to calculate those enrichment
 results, especially if you are dealing with EPIC arrays and have many gene sets.
+If you see the "fading circle" spinning away in the top-right corner of the
+screen, it means that the server is busy working for you - avoid clicking
+anything else until it has completed.
 Once the enrichment table appears, you can then click on the "Enrichment Plot"
 tab.
 

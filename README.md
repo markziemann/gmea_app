@@ -1,5 +1,7 @@
 # Shiny app for LAM enrichment analysis of Infinium methylation data
 
+Version 0.1
+
 ## Run the app
 
 Requirements: Docker capable computer with minimum 4 CPU threads and 8 GB RAM.
